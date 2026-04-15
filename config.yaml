@@ -1,0 +1,63 @@
+# config.yaml — ONS MYE Aggregator configuration
+# =================================================
+# Edit this file to change pipeline behaviour without touching the scripts.
+# All values shown below are the built-in defaults; uncomment and modify only
+# what you need to override.
+
+# ---------------------------------------------------------------------------
+# Paths
+# ---------------------------------------------------------------------------
+paths:
+
+  # Directory containing raw input data files (relative to the project root,
+  # or an absolute path).
+  data_dir: "input"
+
+  # Directory where output CSVs are written (relative to the project root,
+  # or an absolute path).
+  output_dir: "output"
+
+# ---------------------------------------------------------------------------
+# Data source
+# ---------------------------------------------------------------------------
+source:
+
+  # Years to include in the output.
+  # Add or remove entries when ONS releases new or revised editions.
+  years: [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
+
+  # ONS download URL for the MYE Excel file.
+  # Update this path if ONS publishes a new edition at a different URI.
+  # Set to "" to skip auto-download and use the file already placed in data_dir.
+  url: "https://www.ons.gov.uk/file?uri=/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/populationestimatesforukenglandandwalesscotlandandnorthernireland/mid2011tomid2024/myebtablesuk20112024.xlsx"
+
+  # Expected filename inside data_dir.
+  # Must match the filename portion of url (or the manually placed file name).
+  filename: "myebtablesuk20112024.xlsx"
+
+  # Human-readable description shown in pipeline logs.
+  label: "MYE 2011-2024 (single file, post-2021 Census methodology)"
+
+# ---------------------------------------------------------------------------
+# Geography lookup
+# ---------------------------------------------------------------------------
+geography:
+
+  # ONS Open Geography Portal services to try, newest boundary year first.
+  # The pipeline attempts each in order and uses the first successful response.
+  # Add a newer entry (e.g. "LAD25_RGN25_EN_LU") when ONS publishes updates.
+  geoportal_services:
+    - "LAD24_RGN24_EN_LU"
+    - "LAD23_RGN23_EN_LU"
+    - "LAD22_RGN22_EN_LU"
+
+# ---------------------------------------------------------------------------
+# QA validation thresholds
+# ---------------------------------------------------------------------------
+validation:
+
+  # Maximum plausible year-on-year population change (%) at region/country level.
+  # Areas exceeding this in either direction are flagged as WARN.
+  # The UK's average annual growth rate 2011-2024 was ~0.7%; 3% is a
+  # deliberately conservative ceiling to catch errors without false positives.
+  max_yoy_pct: 3.0
